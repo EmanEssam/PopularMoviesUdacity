@@ -208,5 +208,6 @@ public class Movie implements Parcelable {
         dest.writeString(releaseDate);
         dest.writeDouble(getVoteAverage());
         dest.writeInt(id);
+        dest.writeString(posterPath);
     }
 }

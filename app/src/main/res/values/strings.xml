@@ -2,4 +2,6 @@
     <string name="app_name">Popular Movies</string>
     <string name="most_popular">most popular</string>
     <string name="highest_rated">highest rated</string>
+    <string name="trailers">Trailers :</string>
+    <string name="my_favorites">my favorites</string>
 </resources>

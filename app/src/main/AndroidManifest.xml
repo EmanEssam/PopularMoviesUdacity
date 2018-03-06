@@ -19,6 +19,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailsActivity"></activity>
+
+        <provider
+            android:name="com.example.eman.popularmovies.data.MovieProvider"
+            android:authorities="com.example.eman.popularmovies.provider"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:label="LentItemsProvider"
+            android:readPermission="de.openminds.samples.cpsample.lentitems.READ"
+            android:writePermission="de.openminds.samples.cpsample.lentitems.WRITE" />
     </application>
+
 
 </manifest>

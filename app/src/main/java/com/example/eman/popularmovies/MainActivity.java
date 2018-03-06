@@ -6,13 +6,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.eman.popularmovies.adapter.MovieDataAdapter;
 import com.example.eman.popularmovies.adapter.MoviesAdapter;
+import com.example.eman.popularmovies.data.DatabaseHelper;
+import com.example.eman.popularmovies.data.MovieData;
 import com.example.eman.popularmovies.model.Movie;
 import com.example.eman.popularmovies.network.ApiHelper;
 import com.example.eman.popularmovies.network.Constants;
@@ -21,13 +25,16 @@ import com.google.android.gms.common.api.Api;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovies, MoviesAdapter.OnListClickListner {
+public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovies, MoviesAdapter.OnListClickListner, MovieDataAdapter.OnListClickListnerOffline {
     private RecyclerView mMovieList;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private ProgressBar mPb;
     private List<Movie> mMoviesList = new ArrayList<>();
     private TextView mMoviesEmptyView;
+    private List<MovieData> movieDataList = new ArrayList<>();
+    DatabaseHelper mDbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
         mMovieList.setLayoutManager(mLayoutManager);
         ApiHelper.getMostPopularMovies(this);
         ApiHelper.setGetMoviesInterface(this);
+        mDbHelper = new DatabaseHelper(this);
     }
 
     private void hideProgressbar() {
@@ -101,8 +109,28 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
         } else if (item_id == R.id.top_rated_item) {
             showProgressbar();
             ApiHelper.getTopRatedMovies(this);
+        } else if (item_id == R.id.favorite_item) {
+            mAdapter = new MovieDataAdapter(this, mDbHelper.getAllMovies(), this);
+            mMovieList.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            mMoviesEmptyView.setVisibility(View.GONE);
+            mMovieList.setVisibility(View.VISIBLE);
+
+
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onListItemClickedOffline(int ClickedItemPosition) {
+        movieDataList = mDbHelper.getAllMovies();
+        Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+        intent.putExtra(Constants.MOVIE_ID, movieDataList.get(ClickedItemPosition).getId());
+        Log.e("id1", movieDataList.get(ClickedItemPosition).getId());
+        startActivity(intent);
+
+
     }
 }
