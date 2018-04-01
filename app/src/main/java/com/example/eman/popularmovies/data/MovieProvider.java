@@ -19,14 +19,14 @@ public class MovieProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private DatabaseHelper mOpenHelper;
     private static final int MOVIE = 100;
-    private static final int MOVIE_WITH_ID = 200;
+    private static final int MOVIE_WITH_ID = 101;
 
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MoviesContract.CONTENT_AUTHORITY;
-        matcher.addURI(authority, MoviesContract.MovieEntry.TABLE_NAME, MOVIE);
-        matcher.addURI(authority, MoviesContract.MovieEntry.TABLE_NAME + "/#", MOVIE_WITH_ID);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES, MOVIE);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
 
         return matcher;
     }
@@ -46,7 +46,7 @@ public class MovieProvider extends ContentProvider {
             case MOVIE: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MoviesContract.MovieEntry.TABLE_NAME,
-                        projection,
+                        null,
                         selection,
                         selectionArgs,
                         null,
@@ -54,11 +54,10 @@ public class MovieProvider extends ContentProvider {
                         sortOrder);
                 return retCursor;
             }
-            // Individual flavor based on Id selected
             case MOVIE_WITH_ID: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MoviesContract.MovieEntry.TABLE_NAME,
-                        projection,
+                       null,
                         MoviesContract.MovieEntry._ID + " = ?",
                         new String[]{String.valueOf(ContentUris.parseId(uri))},
                         null,
@@ -95,7 +94,7 @@ public class MovieProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
 
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         Uri returnUri;
         switch (sUriMatcher.match(uri)) {
             case MOVIE: {
@@ -120,30 +119,24 @@ public class MovieProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        final int match = sUriMatcher.match(uri);
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
         int numDeleted;
         switch (match) {
             case MOVIE:
                 numDeleted = db.delete(
                         MoviesContract.MovieEntry.TABLE_NAME, selection, selectionArgs);
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
-                        MoviesContract.MovieEntry.TABLE_NAME + "'");
                 break;
             case MOVIE_WITH_ID:
                 numDeleted = db.delete(MoviesContract.MovieEntry.TABLE_NAME,
                         MoviesContract.MovieEntry._ID + " = ?",
                         new String[]{String.valueOf(ContentUris.parseId(uri))});
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
-                        MoviesContract.MovieEntry.TABLE_NAME + "'");
 
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
+        getContext().getContentResolver().notifyChange(uri, null);
         return numDeleted;
     }
 

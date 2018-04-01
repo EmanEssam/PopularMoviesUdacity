@@ -2,6 +2,14 @@
     <string name="app_name">Popular Movies</string>
     <string name="most_popular">most popular</string>
     <string name="highest_rated">highest rated</string>
-    <string name="trailers">Trailers :</string>
+    <string name="trailers">Trailers</string>
     <string name="my_favorites">my favorites</string>
+    <string name="movie_poster_desc">movie poster</string>
+    <string name="favorite_button">favorite button</string>
+    <string name="movie_trailer">movie trailer</string>
+    <string name="release_date">Release date</string>
+    <string name="date">date</string>
+    <string name="plot_synopsis">plot synopsis</string>
+    <string name="no_movies_available">No Movies Available!</string>
+    <string name="reviews">Reviews</string>
 </resources>

@@ -1,8 +1,5 @@
 package com.example.eman.popularmovies.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by Eman on 2/22/2018.
  */

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,7 +16,8 @@
         <ImageView
             android:id="@+id/movie_poster"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/movie_poster_desc" />
 
         <RatingBar
             android:id="@+id/ratingBar2"
@@ -24,6 +26,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:theme="@style/RatingBar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -39,14 +42,15 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Release date:"
+            android:text="@string/release_date"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/plot_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.028"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar2"
-            app:layout_constraintVertical_bias="0.004" />
+            app:layout_constraintVertical_bias="0.031" />
 
         <TextView
             android:id="@+id/release_date_value"
@@ -54,30 +58,33 @@
             android:layout_height="29dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="date"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/date"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@+id/plot_tv"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.212"
+            app:layout_constraintHorizontal_bias="0.294"
             app:layout_constraintStart_toEndOf="@+id/release_date_tv"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar2"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.031" />
 
         <TextView
             android:id="@+id/plot_tv"
             android:layout_width="wrap_content"
-            android:layout_height="23dp"
+            android:layout_height="20dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text=" plot synopsis :"
+            android:text="@string/plot_synopsis"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/plot_tv_value"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.028"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/release_date_tv"
-            app:layout_constraintVertical_bias="0.01" />
+            app:layout_constraintVertical_bias="0.025" />
 
         <TextView
             android:id="@+id/plot_tv_value"
@@ -86,6 +93,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,27 +103,52 @@
             android:id="@+id/trailers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="56dp"
             android:text="@string/trailers"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/trailers_rv"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/plot_tv_value" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/trailers_rv"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/reviews"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/trailers" />
+            app:layout_constraintTop_toBottomOf="@+id/trailers"
+            app:layout_constraintVertical_bias="1.0" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/reviews_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/trailers_rv" />
+            app:layout_constraintTop_toBottomOf="@+id/reviews" />
+
+        <TextView
+            android:id="@+id/reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="100dp"
+            android:text="@string/reviews"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trailers" />
 
         <ImageButton
             android:id="@+id/favoriteBtn"
@@ -124,7 +157,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/ic_action_favorite"
+            android:contentDescription="@string/favorite_button"
+            android:src="@drawable/ic_favorite_border_white_48dp"
             app:layout_constraintEnd_toStartOf="@+id/ratingBar2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_poster"

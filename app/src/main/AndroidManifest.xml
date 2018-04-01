@@ -11,23 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailsActivity"></activity>
+        <activity android:name=".DetailsActivity"/>
 
         <provider
             android:name="com.example.eman.popularmovies.data.MovieProvider"
-            android:authorities="com.example.eman.popularmovies.provider"
-            android:exported="true"
-            android:grantUriPermissions="true"
-            android:label="LentItemsProvider"
-            android:readPermission="de.openminds.samples.cpsample.lentitems.READ"
-            android:writePermission="de.openminds.samples.cpsample.lentitems.WRITE" />
+            android:authorities="com.example.eman.popularmovies"
+            android:exported="false" />
     </application>
 
 

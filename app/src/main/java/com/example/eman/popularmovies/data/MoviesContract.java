@@ -6,16 +6,16 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import static com.example.eman.popularmovies.data.MoviesContract.MovieEntry.CONTENT_URI;
-import static java.lang.Boolean.FALSE;
 
 /**
  * Created by Eman on 2/20/2018.
  */
 
 public class MoviesContract {
-    public static final String CONTENT_AUTHORITY = "com.example.eman.popularmovies.provider";
+    public static final String CONTENT_AUTHORITY = "com.example.eman.popularmovies";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final String PATH_MOVIES = "movies";
 
     public static final class MovieEntry implements BaseColumns {
         public static final String TABLE_NAME = "movie";
@@ -27,7 +27,7 @@ public class MoviesContract {
         public static final String IS_FAVORITE = "favorite";
         public static final String BACKDROP_IMAGE = "backdrop_image";
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
-                .appendPath(TABLE_NAME).build();
+                .appendPath(PATH_MOVIES).build();
         public static final String CONTENT_DIR_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
         // create cursor of base type item for single entry

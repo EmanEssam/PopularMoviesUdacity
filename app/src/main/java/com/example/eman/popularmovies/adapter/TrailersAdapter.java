@@ -37,26 +37,25 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     public TrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.trailer_row, parent, false);
-        TrailerViewHolder vh = new TrailerViewHolder(v);
-
-        return vh;
+        return new TrailerViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(TrailerViewHolder holder, final int position) {
-        Glide.with(mContext).load("https://img.youtube.com/vi/" + mTrailers.get(position).getKey() + "/0.jpg").into(holder.trailerVideo);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uriUrl = Uri.parse("https://www.youtube.com/watch?v=" + mTrailers.get(position).getKey());
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                mContext.startActivity(launchBrowser);
-            }
-        });
 
 
-    }
+            Glide.with(mContext).load("https://img.youtube.com/vi/" + mTrailers.get(position).getKey() + "/0.jpg").into(holder.trailerVideo);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uriUrl = Uri.parse("https://www.youtube.com/watch?v=" + mTrailers.get(position).getKey());
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                    mContext.startActivity(launchBrowser);
+                }
+            });
+        }
+
+
 
     @Override
     public int getItemCount() {
@@ -64,12 +63,14 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     }
 
 
-    public class TrailerViewHolder extends RecyclerView.ViewHolder {
-        public ImageView trailerVideo;
+    class TrailerViewHolder extends RecyclerView.ViewHolder {
+        ImageView trailerVideo;
 
-        public TrailerViewHolder(View itemView) {
+
+        TrailerViewHolder(View itemView) {
             super(itemView);
-            trailerVideo = (ImageView) itemView.findViewById(R.id.video_view_trailer);
+            trailerVideo = itemView.findViewById(R.id.video_view_trailer);
+
 
         }
     }

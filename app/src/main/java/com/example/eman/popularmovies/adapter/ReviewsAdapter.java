@@ -33,15 +33,16 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
     public ReviewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.review_row, parent, false);
-        ReviewsViewHolder vh = new ReviewsViewHolder(v);
 
-        return vh;
+        return new ReviewsViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ReviewsViewHolder holder, final int position) {
 
-        holder.reviewTextView.setText(mReviews.get(position).getContent());
+            holder.reviewTextView.setText(mReviews.get(position).getContent());
+
+
     }
 
     @Override
@@ -50,14 +51,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
     }
 
 
-    public class ReviewsViewHolder extends RecyclerView.ViewHolder {
+    class ReviewsViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView reviewTextView;
+        TextView reviewTextView;
 
-        public ReviewsViewHolder(View itemView) {
+        ReviewsViewHolder(View itemView) {
             super(itemView);
-            reviewTextView = (TextView) itemView.findViewById(R.id.review_tv);
-
+            reviewTextView = itemView.findViewById(R.id.review_tv);
         }
     }
 }

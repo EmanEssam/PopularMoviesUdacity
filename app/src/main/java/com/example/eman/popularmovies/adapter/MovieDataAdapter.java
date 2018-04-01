@@ -22,23 +22,22 @@ import java.util.List;
 public class MovieDataAdapter extends RecyclerView.Adapter<MovieDataAdapter.MoviesViewHolder> {
     private Context mContext;
     private List<MovieData> mMoviesList = new ArrayList<>();
-    private OnListClickListnerOffline onListClickListner;
+    private OnListClickListenerOffline onListClickListener;
 
     public MovieDataAdapter() {
     }
 
-    public MovieDataAdapter(Context mContext, List<MovieData> mMoviesList, OnListClickListnerOffline onListClickListner) {
+    public MovieDataAdapter(Context mContext, List<MovieData> mMoviesList, OnListClickListenerOffline onListClickListner) {
         this.mContext = mContext;
         this.mMoviesList = mMoviesList;
-        this.onListClickListner = onListClickListner;
+        this.onListClickListener = onListClickListner;
     }
 
     @Override
     public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.movie_row, parent, false);
-        MoviesViewHolder vh = new MoviesViewHolder(v);
-        return vh;
+        return new MoviesViewHolder(v);
 
     }
 
@@ -58,18 +57,18 @@ public class MovieDataAdapter extends RecyclerView.Adapter<MovieDataAdapter.Movi
 
         public MoviesViewHolder(final View itemView) {
             super(itemView);
-            movie_poster = (ImageView) itemView.findViewById(R.id.movie_poster);
+            movie_poster = itemView.findViewById(R.id.movie_poster);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    onListClickListner.onListItemClickedOffline(getAdapterPosition());
+                    onListClickListener.onListItemClickedOffline(getAdapterPosition());
                 }
             });
         }
     }
 
-    public interface OnListClickListnerOffline {
+    public interface OnListClickListenerOffline {
         void onListItemClickedOffline(int ClickedItemPosition);
     }
 }

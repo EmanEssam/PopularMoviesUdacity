@@ -10,7 +10,7 @@
         android:id="@+id/empty_view_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Movies Available!"
+        android:text="@string/no_movies_available"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
