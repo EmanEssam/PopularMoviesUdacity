@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -33,29 +34,71 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovies, MoviesAdapter.OnListClickListner, MovieDataAdapter.OnListClickListenerOffline,
         LoaderManager.LoaderCallbacks<Cursor> {
     private RecyclerView mMovieList;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager;
+//    private GridLayoutManager layoutManager ;
+
     private RecyclerView.Adapter mAdapter;
     private ProgressBar mPb;
     private List<Movie> mMoviesList = new ArrayList<>();
     private TextView mMoviesEmptyView;
-    private List<MovieData> movieDataList = new ArrayList<>();
+    private List<MovieData> movieDataList;
     private static final int TASK_LOADER_ID = 0;
+    private static int sortBy = R.id.most_popular_item;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
         showProgressbar();
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getParcelableArrayList("list") != null) {
+                mMoviesList = savedInstanceState.getParcelableArrayList("list");
+                mAdapter = new MoviesAdapter(this, mMoviesList, this);
+                mMovieList.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+            if (sortBy == R.id.favorite_item) {
+                getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mMovieList.scrollToPosition(savedInstanceState.getInt("pos"));
+//                    }
+//                }, 200);
+
+            }
+
+            mMoviesEmptyView.setVisibility(View.GONE);
+            hideProgressbar();
+        } else {
+            ApiHelper.getMostPopularMovies(this);
+            ApiHelper.setGetMoviesInterface(this);
+        }
+
         mLayoutManager = new GridLayoutManager(this, 2);
+//        layoutManager = ((GridLayoutManager)mMovieList.getLayoutManager());
         mMovieList.setHasFixedSize(true);
         mMovieList.setLayoutManager(mLayoutManager);
-        ApiHelper.getMostPopularMovies(this);
-        ApiHelper.setGetMoviesInterface(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mMoviesList != null) {
+            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) mMoviesList);
+        }
+        outState.putInt("pos",mLayoutManager.findFirstVisibleItemPosition());
+//        Log.e("position", String.valueOf(mLayoutManager.findFirstVisibleItemPosition()+1));
 
     }
 
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState ) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        mMovieList.scrollToPosition(savedInstanceState.getInt("position"));
+//    }
 
     private void hideProgressbar() {
         mPb.setVisibility(View.GONE);
@@ -77,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
 
     @Override
     public void moviesList(List<Movie> movies, Context context) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("movies", (ArrayList<? extends Parcelable>) movies);
         mMoviesList = movies;
         mAdapter = new MoviesAdapter(this, movies, this);
         mMovieList.setAdapter(mAdapter);
@@ -110,13 +155,16 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
     public boolean onOptionsItemSelected(MenuItem item) {
         int item_id = item.getItemId();
         if (item_id == R.id.most_popular_item) {
+            sortBy = R.id.most_popular_item;
             showProgressbar();
             ApiHelper.getMostPopularMovies(this);
 
         } else if (item_id == R.id.top_rated_item) {
+            sortBy = R.id.top_rated_item;
             showProgressbar();
             ApiHelper.getTopRatedMovies(this);
         } else if (item_id == R.id.favorite_item) {
+            sortBy = R.id.favorite_item;
             showProgressbar();
             getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
 
@@ -216,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
             mMoviesEmptyView.setVisibility(View.VISIBLE);
             mMovieList.setVisibility(View.GONE);
         } else {
+            movieDataList = new ArrayList<>();
             movieDataList = getAllMovies(data);
             mAdapter = new MovieDataAdapter(this, getAllMovies(data), this);
             mMovieList.setAdapter(mAdapter);

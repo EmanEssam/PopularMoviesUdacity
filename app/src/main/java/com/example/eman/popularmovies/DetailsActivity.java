@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetTrailers, ApiHelper.GetReviews {
     private Movie currentMovie;
-    private TextView mReleaseDate, mPlot,mReviewsTv,mTrailersTv;
+    private TextView mReleaseDate, mPlot, mReviewsTv, mTrailersTv;
     private RatingBar mRatingBar;
     private ImageView mMoviePoster;
     private RecyclerView mTrailers;
@@ -42,8 +43,9 @@ public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetT
     private RecyclerView.Adapter mReviewsAdapter;
     private ImageButton mFavoriteBtn;
     private String movieID;
-    MovieData offlineMovie;
-
+    private MovieData offlineMovie;
+    private List<Trailer> trailerList;
+    private List<Review> reviewList;
 
     @Override
 
@@ -54,13 +56,38 @@ public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetT
         movieID = getIntent().getStringExtra(Constants.MOVIE_ID);
         initViews();
         populateUI();
-        ApiHelper.setGetTrailersInterface(this);
-        ApiHelper.setGetReviewsInterface(this);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getParcelableArrayList("trailers") != null) {
+                setTrailers(savedInstanceState.<Trailer>getParcelableArrayList("trailers"));
+
+            }
+            if (savedInstanceState.getParcelableArrayList("reviews") != null) {
+                setReviews(savedInstanceState.<Review>getParcelableArrayList("reviews"));
+            }
+
+        } else {
+            ApiHelper.setGetTrailersInterface(this);
+            ApiHelper.setGetReviewsInterface(this);
+        }
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mLayoutManager_reviews = new LinearLayoutManager(this);
         mReviews.setLayoutManager(mLayoutManager_reviews);
         mTrailers.setLayoutManager(mLayoutManager);
         mTrailers.setHasFixedSize(true);
+
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (trailerList != null) {
+            outState.putParcelableArrayList("trailers", (ArrayList<? extends Parcelable>) trailerList);
+        }
+        if (reviewList != null) {
+            outState.putParcelableArrayList("reviews", (ArrayList<? extends Parcelable>) reviewList);
+        }
 
 
     }
@@ -147,25 +174,29 @@ public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetT
         mTrailers = findViewById(R.id.trailers_rv);
         mReviews = findViewById(R.id.reviews_rv);
         mFavoriteBtn = findViewById(R.id.favoriteBtn);
-        mTrailersTv=findViewById(R.id.trailers);
-        mReviewsTv=findViewById(R.id.reviews);
+        mTrailersTv = findViewById(R.id.trailers);
+        mReviewsTv = findViewById(R.id.reviews);
     }
 
     @Override
     public void TrailersList(List<Trailer> trailers, Context context) {
 
-        Log.e("listSize",trailers.size()+"");
+        Log.e("listSize", trailers.size() + "");
 
-        if (trailers.size()==0){
+        setTrailers(trailers);
+
+    }
+
+    private void setTrailers(List<Trailer> trailers) {
+        if (trailers.size() == 0) {
             mTrailersTv.setVisibility(View.GONE);
             mTrailers.setVisibility(View.GONE);
-        }else {
+        } else {
             mTrailers.setVisibility(View.VISIBLE);
             mTrailersTv.setVisibility(View.VISIBLE);
             mTrailersAdapter = new TrailersAdapter(this, trailers);
             mTrailers.setAdapter(mTrailersAdapter);
         }
-
     }
 
     @Override
@@ -176,11 +207,15 @@ public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetT
     @Override
     public void ReviewsList(List<Review> reviews, Context context) {
 
-        Log.e("listSize",reviews.size()+"");
-        if (reviews.size()==0){
+        Log.e("listSize", reviews.size() + "");
+        setReviews(reviews);
+    }
+
+    private void setReviews(List<Review> reviews) {
+        if (reviews.size() == 0) {
             mReviewsTv.setVisibility(View.GONE);
             mReviews.setVisibility(View.GONE);
-        }else {
+        } else {
             mReviewsTv.setVisibility(View.VISIBLE);
             mReviews.setVisibility(View.VISIBLE);
             mReviewsAdapter = new ReviewsAdapter(this, reviews);
@@ -193,7 +228,7 @@ public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetT
 
     }
 
-    public Boolean isMovieFavorite(String id) {
+    private Boolean isMovieFavorite(String id) {
         Boolean favorite = false;
         List<MovieData> movieData = getAllMovies();
         for (int i = 0; i < movieData.size(); i++) {

@@ -1,5 +1,8 @@
 package com.example.eman.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Eman on 2/17/2018.
  */
 
-public class Trailer {
+public class Trailer implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -33,6 +36,33 @@ public class Trailer {
     @SerializedName("type")
     @Expose
     private String type;
+
+    protected Trailer(Parcel in) {
+        id = in.readString();
+        iso6391 = in.readString();
+        iso31661 = in.readString();
+        key = in.readString();
+        name = in.readString();
+        site = in.readString();
+        if (in.readByte() == 0) {
+            size = null;
+        } else {
+            size = in.readInt();
+        }
+        type = in.readString();
+    }
+
+    public static final Creator<Trailer> CREATOR = new Creator<Trailer>() {
+        @Override
+        public Trailer createFromParcel(Parcel in) {
+            return new Trailer(in);
+        }
+
+        @Override
+        public Trailer[] newArray(int size) {
+            return new Trailer[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -96,5 +126,27 @@ public class Trailer {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(iso6391);
+        parcel.writeString(iso31661);
+        parcel.writeString(key);
+        parcel.writeString(name);
+        parcel.writeString(site);
+        if (size == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(size);
+        }
+        parcel.writeString(type);
     }
 }
