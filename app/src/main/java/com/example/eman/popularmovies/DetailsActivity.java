@@ -58,12 +58,12 @@ public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetT
         populateUI();
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.getParcelableArrayList("trailers") != null) {
-                setTrailers(savedInstanceState.<Trailer>getParcelableArrayList("trailers"));
+            if (savedInstanceState.getParcelableArrayList(getString(R.string.trailersExtra))!= null) {
+                setTrailers(savedInstanceState.<Trailer>getParcelableArrayList(getString(R.string.trailersExtra)));
 
             }
-            if (savedInstanceState.getParcelableArrayList("reviews") != null) {
-                setReviews(savedInstanceState.<Review>getParcelableArrayList("reviews"));
+            if (savedInstanceState.getParcelableArrayList(getString(R.string.reviewsExtra)) != null) {
+                setReviews(savedInstanceState.<Review>getParcelableArrayList(getString(R.string.reviewsExtra)));
             }
 
         } else {
@@ -83,10 +83,10 @@ public class DetailsActivity extends AppCompatActivity implements ApiHelper.GetT
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (trailerList != null) {
-            outState.putParcelableArrayList("trailers", (ArrayList<? extends Parcelable>) trailerList);
+            outState.putParcelableArrayList(getString(R.string.trailersExtra), (ArrayList<? extends Parcelable>) trailerList);
         }
         if (reviewList != null) {
-            outState.putParcelableArrayList("reviews", (ArrayList<? extends Parcelable>) reviewList);
+            outState.putParcelableArrayList(getString(R.string.reviewsExtra), (ArrayList<? extends Parcelable>) reviewList);
         }
 
 

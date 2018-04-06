@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
         LoaderManager.LoaderCallbacks<Cursor> {
     private RecyclerView mMovieList;
     private GridLayoutManager mLayoutManager;
-//    private GridLayoutManager layoutManager ;
 
     private RecyclerView.Adapter mAdapter;
     private ProgressBar mPb;
@@ -53,21 +52,14 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
         initView();
         showProgressbar();
         if (savedInstanceState != null) {
-            if (savedInstanceState.getParcelableArrayList("list") != null) {
-                mMoviesList = savedInstanceState.getParcelableArrayList("list");
+            if (savedInstanceState.getParcelableArrayList(getString(R.string.Extra_list)) != null) {
+                mMoviesList = savedInstanceState.getParcelableArrayList(getString(R.string.Extra_list));
                 mAdapter = new MoviesAdapter(this, mMoviesList, this);
                 mMovieList.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             }
             if (sortBy == R.id.favorite_item) {
                 getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mMovieList.scrollToPosition(savedInstanceState.getInt("pos"));
-//                    }
-//                }, 200);
-
             }
 
             mMoviesEmptyView.setVisibility(View.GONE);
@@ -78,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
         }
 
         mLayoutManager = new GridLayoutManager(this, 2);
-//        layoutManager = ((GridLayoutManager)mMovieList.getLayoutManager());
         mMovieList.setHasFixedSize(true);
         mMovieList.setLayoutManager(mLayoutManager);
     }
@@ -87,18 +78,9 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mMoviesList != null) {
-            outState.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) mMoviesList);
+            outState.putParcelableArrayList(getString(R.string.Extra_list), (ArrayList<? extends Parcelable>) mMoviesList);
         }
-        outState.putInt("pos",mLayoutManager.findFirstVisibleItemPosition());
-//        Log.e("position", String.valueOf(mLayoutManager.findFirstVisibleItemPosition()+1));
-
     }
-
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState ) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        mMovieList.scrollToPosition(savedInstanceState.getInt("position"));
-//    }
 
     private void hideProgressbar() {
         mPb.setVisibility(View.GONE);
@@ -120,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements ApiHelper.GetMovi
 
     @Override
     public void moviesList(List<Movie> movies, Context context) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("movies", (ArrayList<? extends Parcelable>) movies);
         mMoviesList = movies;
         mAdapter = new MoviesAdapter(this, movies, this);
         mMovieList.setAdapter(mAdapter);

@@ -12,4 +12,7 @@
     <string name="plot_synopsis">plot synopsis</string>
     <string name="no_movies_available">No Movies Available!</string>
     <string name="reviews">Reviews</string>
+    <string name="Extra_list">extrasliat</string>
+    <string name="trailersExtra">trailers</string>
+    <string name="reviewsExtra">reviews</string>
 </resources>
